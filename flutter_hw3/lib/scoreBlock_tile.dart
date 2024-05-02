@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hw3/scoreBlock.dart';
 
 class ScoreBlockTile extends StatefulWidget {
-  ScoreBlockTile({super.key, required this.scoreBlock});
+  ScoreBlockTile({super.key, required this.scoreBlock, required this.section});
 
   final ScoreBlock scoreBlock;
+  final String section;
 
   @override
   State<ScoreBlockTile> createState() => _ScoreBlockTile();
@@ -22,13 +23,33 @@ class _ScoreBlockTile extends State<ScoreBlockTile> {
         });
       },
       child: Container(
-        alignment: Alignment.center,
-        width: 30,
-        height: 30,
-        color: _isClicked ? Colors.green[400] : Colors.green[100],
-        child: Text(
-          widget.scoreBlock.getScore(),
-          // scoreBlock.getScore(),
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Row(
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                alignment: Alignment.center,
+                color: _isClicked ? Colors.green[400] : Colors.green[100],
+                child: Text(
+                  widget.scoreBlock.getScore(),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Container(
+                width: 50,
+                height: 50,
+                alignment: Alignment.center,
+                color: _isClicked ? Colors.green[400] : Colors.green[100],
+                child: Text(
+                  widget.scoreBlock.getScore(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
