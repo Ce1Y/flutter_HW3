@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hw3/scoreBlock.dart';
+import 'package:flutter_hw3/scoreBlockRow.dart';
 import 'package:flutter_hw3/scoreBlock_tile.dart';
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -12,8 +13,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
+      // theme: ThemeData(scaffoldBackgroundColor: Colors.blue),
       home: MyHomePage(),
     );
   }
@@ -27,34 +29,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<ScoreBlock> scoreBlocks = [
-    ScoreBlock(score: 0),
-    ScoreBlock(score: 1),
-    ScoreBlock(score: 2),
-    ScoreBlock(score: 3),
-    ScoreBlock(score: 4),
-    ScoreBlock(score: 5),
-    ScoreBlock(score: 6),
+  List<ScoreBlockRow> scoreBlockRows = [
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
+    ScoreBlockRow(0, 0),
   ];
+  final _diceEmojis = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+
+  var _diceIndex = 0;
+  var _rowCount = 3;
+  bool _dickClickable = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        // child: Container(
-        //   padding: const EdgeInsets.all(5),
-        //   alignment: Alignment.topCenter,
-        //   margin: const EdgeInsets.symmetric(horizontal: 10),
-        //   decoration: const BoxDecoration(
-        //     borderRadius: BorderRadius.all(Radius.circular(10)),
-        //     color: Colors.grey,
-        //   ),
-        //   // height: 520,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               decoration: const BoxDecoration(
-                color: Color.fromRGBO(255, 235, 59, 1),
+                color: Colors.yellow,
               ),
               child: const Row(
                 // section title
@@ -75,60 +81,124 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
+            const SizedBox(
+              height: 5,
+            ),
             // score blocks
-            // Row(
-            //   children: [
-            // Expanded(
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.red,
-              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: scoreBlocks.length,
+                itemCount: scoreBlockRows.length,
+                scrollDirection: Axis.vertical,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
+                  crossAxisCount: 2,
                   mainAxisSpacing: 5,
                   crossAxisSpacing: 5,
-                  childAspectRatio: 6 / 1,
+                  childAspectRatio: 32 / 9,
                 ),
                 itemBuilder: (context, index) {
                   return ScoreBlockTile(
-                    scoreBlock: scoreBlocks[index],
-                    section: "upper",
+                    index: index,
+                    scoreBlockRow: scoreBlockRows[index],
                   );
                 },
               ),
-              // major blocks
-              // Expanded(
-              //   child: GridView.builder(
-              //     physics: const NeverScrollableScrollPhysics(),
-              //     shrinkWrap: true,
-              //     itemCount: scoreBlocks.length,
-              //     gridDelegate:
-              //         const SliverGridDelegateWithFixedCrossAxisCount(
-              //       crossAxisCount: 1,
-              //       mainAxisSpacing: 10,
-              //       crossAxisSpacing: 10,
-              //       childAspectRatio: 1.0,
-              //     ),
-              //     itemBuilder: (context, index) {
-              //       return ScoreBlockTile(
-              //         scoreBlock: scoreBlocks[index],
-              //         section: "lower",
-              //       );
-              //     },
-              //   ),
-              // ),
             ),
-            // )
+            // dice area
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  _diceEmojis[_diceIndex],
+                  style: const TextStyle(
+                    fontSize: 45,
+                    color: Colors.orange,
+                  ),
+                ),
+                Text(
+                  _diceEmojis[_diceIndex],
+                  style: const TextStyle(
+                    fontSize: 45,
+                  ),
+                ),
+                Text(
+                  _diceEmojis[_diceIndex],
+                  style: const TextStyle(
+                    fontSize: 45,
+                  ),
+                ),
+                Text(
+                  _diceEmojis[_diceIndex],
+                  style: const TextStyle(
+                    fontSize: 45,
+                  ),
+                ),
+                Text(
+                  _diceEmojis[_diceIndex],
+                  style: const TextStyle(
+                    fontSize: 45,
+                  ),
+                ),
+              ],
+            ),
+            // buttons area
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                // row button
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      if (_rowCount > 0) {
+                        _diceIndex = Random().nextInt(6);
+                        _rowCount -= 1;
+                      }
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    foregroundColor:
+                        _rowCount > 0 ? Colors.black : Colors.grey[600],
+                    backgroundColor:
+                        _rowCount > 0 ? Colors.blue : Colors.grey[200],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: Text(
+                      "Row($_rowCount)",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+                // play button
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _rowCount = 3;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: Text(
+                      "Play",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
-          //   ),
-          // ],
         ),
       ),
-      // ),
     );
   }
 }
