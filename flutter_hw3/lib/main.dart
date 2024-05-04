@@ -50,14 +50,13 @@ class _MyHomePageState extends State<MyHomePage> {
   // row dice related
   final _diceEmojis = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
   List<bool> _isClickableIndex = [true, true, true, true, true];
+  // is dice below is clicked before
   List<bool> _isClicked = [false, false, false, false, false];
   List<int> _diceIndexes = [0, 0, 0, 0, 0];
 
   var _rowCount = 3;
   var _playerScore = 0;
   var _opponentScore = 0;
-  // bool _dickClickable = false;
-  bool _playBtnClickable = false;
 
   void _setClickable() {
     setState(() {
@@ -70,12 +69,80 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // score related
+  List<bool> _isPlayerBlockClicked = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ];
+  List<bool> _isOpponentBlockClicked = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ];
+
+  List<int> _blockIndexes = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+  ];
+
   var _clickedBlockIndex = -1;
+  bool _blockSelectable = true;
 
   void _setIndex(int newIndex) {
     setState(() {
-      _clickedBlockIndex = newIndex;
-      _playerScore += 1;
+      // trigger after clicked
+      if (_blockSelectable) {
+        _clickedBlockIndex = newIndex - 1;
+        _blockSelectable = false;
+        // player round
+        if (round % 2 == 1) {
+          _isPlayerBlockClicked[newIndex - 1] = true;
+        } else {
+          _isOpponentBlockClicked[newIndex - 1] = true;
+        }
+      } else {
+        _clickedBlockIndex = -1;
+        _blockSelectable = true;
+        if (round % 2 == 1) {
+          _isPlayerBlockClicked[newIndex - 1] = false;
+        } else {
+          _isOpponentBlockClicked[newIndex - 1] = false;
+        }
+      }
     });
   }
 
@@ -180,8 +247,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   return ScoreBlockTile(
                     index: index,
                     round: round,
+                    rowTimes: _rowCount,
                     scoreBlockRow: scoreBlockRows[index],
-                    onPressed: () => _setIndex(1),
+                    isPlayerClicked: _isPlayerBlockClicked[index],
+                    isOpponentClicked: _isOpponentBlockClicked[index],
+                    onPressed: () => _setIndex(_blockIndexes[index]),
                   );
                 },
               ),
@@ -268,19 +338,23 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 // row button
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _setClickable();
-                      if (_rowCount > 0) {
-                        for (var i = 0; i < 5; i++) {
-                          if (_isClickableIndex[i]) {
-                            _diceIndexes[i] = Random().nextInt(6);
-                          }
-                        }
-                        _rowCount -= 1;
-                      }
-                    });
-                  },
+                  onPressed: _rowCount == 0
+                      ? null
+                      : () {
+                          setState(() {
+                            _setClickable();
+                            for (var i = 0; i < 5; i++) {
+                              if (_isClickableIndex[i]) {
+                                _diceIndexes[i] = Random().nextInt(6);
+                              }
+                              _isPlayerBlockClicked[i] = false;
+                              _isOpponentBlockClicked[i] = false;
+                            }
+                            _rowCount -= 1;
+                            _clickedBlockIndex = -1;
+                            _blockSelectable = true;
+                          });
+                        },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
@@ -298,18 +372,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 // play button
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _rowCount = 3;
-                      _clickedBlockIndex = -1;
-                    });
-                  },
+                  onPressed: _blockSelectable && _rowCount != 3
+                      ? null // any of block hasn't been selected yet
+                      : () {
+                          // one block has been selected
+                          setState(() {
+                            _rowCount = 3;
+                            _clickedBlockIndex = -1;
+                          });
+                        },
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      backgroundColor:
-                          _playBtnClickable ? Colors.green : Colors.grey[200]),
+                      backgroundColor: !_blockSelectable && _rowCount != 3
+                          ? Colors.green
+                          : Colors.grey[200]),
                   child: const Padding(
                     padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: Text(
