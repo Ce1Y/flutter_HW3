@@ -65,6 +65,10 @@ class _MyHomePageState extends State<MyHomePage> {
           _isClickableIndex[i] = false;
         }
       }
+      for (int i = 0; i < 14; i++) {
+        _isPlayerBlockClicked[i] = false;
+        _isOpponentBlockClicked[i] = false;
+      }
     });
   }
 
