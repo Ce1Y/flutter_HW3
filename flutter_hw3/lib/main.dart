@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hw3/scoreBlockRow.dart';
 import 'package:flutter_hw3/scoreBlock_tile.dart';
+import 'package:flutter_hw3/dice.dart';
 import 'dart:math';
 
 void main() {
@@ -45,11 +46,29 @@ class _MyHomePageState extends State<MyHomePage> {
     ScoreBlockRow(0, 0),
     ScoreBlockRow(0, 0),
   ];
+  // row dice related
   final _diceEmojis = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+  List<bool> _isClickableIndex = [true, true, true, true, true];
+  List<bool> _isClicked = [false, false, false, false, false];
+  List<int> _diceIndexes = [0, 0, 0, 0, 0];
 
-  var _diceIndex = 0;
   var _rowCount = 3;
+  var _playerScore = 0;
+  var _opponentScore = 0;
   bool _dickClickable = false;
+  bool _playBtnClickable = false;
+
+  void _setClickable() {
+    setState(() {
+      for (int i = 0; i < 5; i++) {
+        if (_isClicked[i]) {
+          _isClickableIndex[i] = false;
+        }
+      }
+    });
+  }
+
+  // score related
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +77,62 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //navigation button(),
+                //menu button(),
+                Container(
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.account_circle,
+                        color: Colors.blue,
+                        size: 30,
+                      ),
+                      Column(
+                        children: [
+                          const Text("player1"),
+                          Text(_playerScore.toString()),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 30,
+                ),
+                const Text("VS", style: TextStyle(fontSize: 20)),
+                const SizedBox(
+                  width: 30,
+                ),
+                Container(
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          const Text("player2"),
+                          Text(_opponentScore.toString()),
+                        ],
+                      ),
+                      const Icon(
+                        Icons.account_circle,
+                        color: Colors.red,
+                        size: 30,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            // section header
             Container(
               decoration: const BoxDecoration(
                 color: Colors.yellow,
               ),
               child: const Row(
                 // section title
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "Minor",
@@ -72,6 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       fontSize: 20,
                     ),
                   ),
+                  SizedBox(width: 120),
                   Text(
                     "Major",
                     style: TextStyle(
@@ -94,8 +163,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 scrollDirection: Axis.vertical,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  mainAxisSpacing: 5,
-                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 10,
                   childAspectRatio: 32 / 9,
                 ),
                 itemBuilder: (context, index) {
@@ -110,35 +179,74 @@ class _MyHomePageState extends State<MyHomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  _diceEmojis[_diceIndex],
-                  style: const TextStyle(
-                    fontSize: 45,
-                    color: Colors.orange,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isClicked[0] = !_isClicked[0];
+                    });
+                  },
+                  child: Text(
+                    _diceEmojis[_diceIndexes[0]],
+                    style: TextStyle(
+                      fontSize: 50,
+                      color: _isClicked[0] ? Colors.orange : Colors.black,
+                    ),
                   ),
                 ),
-                Text(
-                  _diceEmojis[_diceIndex],
-                  style: const TextStyle(
-                    fontSize: 45,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isClicked[1] = !_isClicked[1];
+                    });
+                  },
+                  child: Text(
+                    _diceEmojis[_diceIndexes[1]],
+                    style: TextStyle(
+                      fontSize: 50,
+                      color: _isClicked[1] ? Colors.orange : Colors.black,
+                    ),
                   ),
                 ),
-                Text(
-                  _diceEmojis[_diceIndex],
-                  style: const TextStyle(
-                    fontSize: 45,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isClicked[2] = !_isClicked[2];
+                    });
+                  },
+                  child: Text(
+                    _diceEmojis[_diceIndexes[2]],
+                    style: TextStyle(
+                      fontSize: 50,
+                      color: _isClicked[2] ? Colors.orange : Colors.black,
+                    ),
                   ),
                 ),
-                Text(
-                  _diceEmojis[_diceIndex],
-                  style: const TextStyle(
-                    fontSize: 45,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isClicked[3] = !_isClicked[3];
+                    });
+                  },
+                  child: Text(
+                    _diceEmojis[_diceIndexes[3]],
+                    style: TextStyle(
+                      fontSize: 50,
+                      color: _isClicked[3] ? Colors.orange : Colors.black,
+                    ),
                   ),
                 ),
-                Text(
-                  _diceEmojis[_diceIndex],
-                  style: const TextStyle(
-                    fontSize: 45,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isClicked[4] = !_isClicked[4];
+                    });
+                  },
+                  child: Text(
+                    _diceEmojis[_diceIndexes[4]],
+                    style: TextStyle(
+                      fontSize: 50,
+                      color: _isClicked[4] ? Colors.orange : Colors.black,
+                    ),
                   ),
                 ),
               ],
@@ -151,8 +259,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
+                      _setClickable();
                       if (_rowCount > 0) {
-                        _diceIndex = Random().nextInt(6);
+                        for (var i = 0; i < 5; i++) {
+                          if (_isClickableIndex[i]) {
+                            _diceIndexes[i] = Random().nextInt(6);
+                          }
+                        }
                         _rowCount -= 1;
                       }
                     });
@@ -161,8 +274,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    foregroundColor:
-                        _rowCount > 0 ? Colors.black : Colors.grey[600],
                     backgroundColor:
                         _rowCount > 0 ? Colors.blue : Colors.grey[200],
                   ),
@@ -170,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: Text(
                       "Row($_rowCount)",
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
                 ),
@@ -182,15 +293,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      backgroundColor:
+                          _playBtnClickable ? Colors.green : Colors.grey[200]),
                   child: const Padding(
                     padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: Text(
                       "Play",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
                 ),

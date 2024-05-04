@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hw3/scoreBlockRow.dart';
-import 'package:flutter_hw3/scorecard.dart';
 
 class ScoreBlockTile extends StatefulWidget {
-  ScoreBlockTile({
+  const ScoreBlockTile({
     super.key,
     required this.index,
     required this.scoreBlockRow,
@@ -25,15 +24,15 @@ class _ScoreBlockTile extends State<ScoreBlockTile> {
     "⚁": 2,
     "4x": 0,
     "⚂": 3,
-    "FH": 25,
+    "Full House": 25,
     "⚃": 4,
-    "SS": 30,
+    "Small Straight": 30,
     "⚄": 5,
-    "LS": 40,
+    "Large Straight": 40,
     "⚅": 6,
-    "Ya": 50,
-    "35": 35,
-    "CH": 0,
+    "Yahtzee": 50,
+    "Bonus +35": 35,
+    "Chance": 0,
   };
 
   @override
@@ -41,12 +40,14 @@ class _ScoreBlockTile extends State<ScoreBlockTile> {
     return Row(
       children: [
         // find key through index
-        Padding(
-          padding: const EdgeInsets.all(5),
+        Container(
+          alignment: Alignment.center,
+          width: 50,
           child: Text(
             section.keys.elementAt(widget.index),
-            style: const TextStyle(
-              fontSize: 20,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: fontSizeJudge(section.keys.elementAt(widget.index)),
             ),
           ),
         ),
@@ -68,6 +69,7 @@ class _ScoreBlockTile extends State<ScoreBlockTile> {
             color: _isClicked ? Colors.green[400] : Colors.green[100],
             child: Text(
               widget.scoreBlockRow.getScore(),
+              style: const TextStyle(fontSize: 20),
             ),
           ),
         ),
@@ -89,10 +91,26 @@ class _ScoreBlockTile extends State<ScoreBlockTile> {
             color: _isClicked2 ? Colors.amber : Colors.green[100],
             child: Text(
               widget.scoreBlockRow.getOpponentScore(),
+              style: const TextStyle(fontSize: 20),
             ),
           ),
         ),
       ],
     );
+  }
+}
+
+double fontSizeJudge(String category) {
+  if (category == "⚀" ||
+      category == "⚁" ||
+      category == "⚂" ||
+      category == "⚃" ||
+      category == "⚄" ||
+      category == "⚅") {
+    return 25;
+  } else if (category == "3x" || category == "4x") {
+    return 20;
+  } else {
+    return 13;
   }
 }
