@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hw3/scoreBlockRow.dart';
 import 'package:flutter_hw3/scoreBlock_tile.dart';
-import 'package:flutter_hw3/dice.dart';
 import 'dart:math';
 
 void main() {
@@ -46,6 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
     ScoreBlockRow(0, 0),
     ScoreBlockRow(0, 0),
   ];
+  var round = 1;
+
   // row dice related
   final _diceEmojis = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
   List<bool> _isClickableIndex = [true, true, true, true, true];
@@ -55,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var _rowCount = 3;
   var _playerScore = 0;
   var _opponentScore = 0;
-  bool _dickClickable = false;
+  // bool _dickClickable = false;
   bool _playBtnClickable = false;
 
   void _setClickable() {
@@ -69,6 +70,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // score related
+  var _clickedBlockIndex = -1;
+
+  void _setIndex(int newIndex) {
+    setState(() {
+      _clickedBlockIndex = newIndex;
+      _playerScore += 1;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +179,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (context, index) {
                   return ScoreBlockTile(
                     index: index,
+                    round: round,
                     scoreBlockRow: scoreBlockRows[index],
+                    onPressed: () => _setIndex(1),
                   );
                 },
               ),
@@ -290,6 +301,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     setState(() {
                       _rowCount = 3;
+                      _clickedBlockIndex = -1;
                     });
                   },
                   style: ElevatedButton.styleFrom(
