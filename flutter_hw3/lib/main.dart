@@ -60,11 +60,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _setClickable() {
     setState(() {
+      // 5 dices in the frame below
       for (int i = 0; i < 5; i++) {
         if (_isClicked[i]) {
           _isClickableIndex[i] = false;
         }
       }
+      // 14 score blocks reset
       for (int i = 0; i < 14; i++) {
         _isPlayerBlockClicked[i] = false;
         _isOpponentBlockClicked[i] = false;
@@ -358,6 +360,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             _clickedBlockIndex = -1;
                             _blockSelectable = true;
                           });
+                          countScore();
                         },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -383,6 +386,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           setState(() {
                             _rowCount = 3;
                             _clickedBlockIndex = -1;
+                            round += 1;
                           });
                         },
                   style: ElevatedButton.styleFrom(
@@ -407,4 +411,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+void countScore() {
+  // Ace judge
+
+  // Twos judge
 }
